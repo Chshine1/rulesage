@@ -1,0 +1,27 @@
+{
+  "name": "rulesage",
+  "version": "0.0.1",
+  "private": true,
+  "description": "",
+  "packageManager": "yarn@4.13.0",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint \"packages/**/*.ts\""
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "@types/node": "^25.6.0",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^5.5.5",
+    "glob": "^13.0.6",
+    "globals": "^17.5.0",
+    "prettier": "^3.8.3",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^8.58.2"
+  }
+}

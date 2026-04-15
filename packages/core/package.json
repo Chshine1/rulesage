@@ -1,0 +1,21 @@
+{
+  "name": "@rulesage/core",
+  "version": "0.0.1",
+  "private": true,
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@langchain/core": "^1.1.40",
+    "@langchain/langgraph": "^1.2.8",
+    "@langchain/openai": "^1.4.4",
+    "drizzle-orm": "^0.45.2",
+    "minimatch": "^10.2.5",
+    "pg": "^8.20.0",
+    "simple-git": "^3.36.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.20.0",
+    "drizzle-kit": "^0.31.10"
+  }
+}

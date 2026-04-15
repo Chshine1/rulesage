@@ -1,0 +1,11 @@
+{
+  "name": "@rulesage/cli",
+  "version": "0.0.1",
+  "private": true,
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@rulesage/core": "workspace:*",
+    "commander": "^14.0.3"
+  }
+}
