@@ -1,6 +1,7 @@
 ﻿import { drizzle } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
-import * as schema from './schema';
+import { ruleReferences } from './schemas/rule-reference';
+import { rules } from './schemas/rule';
 
 class Database {
   private static instance: Database;
@@ -29,6 +30,10 @@ class Database {
       throw error;
     }
 
+    const schema = {
+      rules,
+      ruleReferences,
+    };
     this.db = drizzle(this.pool, { schema });
 
     return this.db;

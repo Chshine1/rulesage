@@ -55,13 +55,13 @@ CREATE TABLE rule_references (
   "refs": [
     {
       "placeholder": "{rule:6}",
-      "rule_id": 6,
-      "rule_name": "Create NestJS DI standard service class"
+      "ruleId": 6,
+      "ruleName": "Create NestJS DI standard service class"
     },
     {
       "placeholder": "{rule:2}",
-      "rule_id": 2,
-      "rule_name": "Non-gateway microservice directory specification"
+      "ruleId": 2,
+      "ruleName": "Non-gateway microservice directory specification"
     }
   ]
 }
@@ -79,16 +79,16 @@ CREATE TABLE rule_references (
 
 ```typescript
 const contextSchema = {
-  service_path: {
+  servicePath: {
     description: 'Relative path to the current microservice root directory',
-    source_rule_id: 101, // Assume 101 is the "get service root directory" rule
+    sourceRuleId: 101, // Assume 101 is the "get service root directory" rule
     output: 'a relative path', // Specific what and how to output
     required: true,
   },
-  domain_aggregates: {
+  domainAggregates: {
     description: 'List of aggregate roots parsed from DOMAIN.md',
-    source_rule_id: 3, // Rule 3: "DOMAIN.md DDD domain modeling specification"
-    output_key: 'names of aggregates as an array',
+    sourceRuleId: 3, // Rule 3: "DOMAIN.md DDD domain modeling specification"
+    output: 'names of aggregates as an array',
     required: true,
   },
 };

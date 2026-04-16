@@ -1,5 +1,5 @@
 ﻿import { Annotation } from '@langchain/langgraph';
-import { Rule } from '../db/schema';
+import { Rule } from '../db/schemas/rule';
 
 export interface FileDiff {
   filePath: string;
