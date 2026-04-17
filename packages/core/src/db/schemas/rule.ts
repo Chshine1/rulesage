@@ -7,7 +7,8 @@
   timestamp,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { z } from 'zod/index';
+import { z } from 'zod';
+import { createSelectSchema } from 'drizzle-zod';
 
 const RULE_NAME_LENGTH = 100;
 const TAG_LENGTH = 50;
@@ -52,11 +53,10 @@ export const contextSchema = z.object({
   required: z.boolean(),
 });
 
-export type Rule = Exclude<
-  typeof rules.$inferSelect,
-  'descriptionRefs' | 'trigger' | 'context'
-> & {
-  descriptionRefs: z.infer<typeof descriptionRefsSchema>;
-  trigger: z.infer<typeof triggerSchema>;
-  context: z.infer<typeof contextSchema>;
-};
+export const ruleSchema = createSelectSchema(rules, {
+  descriptionRefs: () => descriptionRefsSchema,
+  trigger: () => triggerSchema,
+  context: () => contextSchema,
+});
+
+export type Rule = z.infer<typeof ruleSchema>;

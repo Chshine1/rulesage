@@ -5,25 +5,6 @@ Instead of two separate graphs, we design a **unified state machine** that enter
 **The shared global state object roughly includes:**
 
 ```typescript
-/**
- * Represents a single step within the execution plan.
- * Steps can be nested to arbitrary depth, forming a tree that is executed
- * depth‑first. This naturally models recursive expansion of complex tasks.
- */
-interface ExecutionStep {
-  id: string; // Unique identifier for this step
-  description: string; // Human-readable description of what this step does
-  ruleRequired: number | null; // ID of the rule needed to execute this step (null if no rule)
-  action: string; // Action type, e.g., "readAndParse", "generateCode", "createFile"
-  parameters?: Record<string, any>; // Additional parameters for the action
-  /**
-   * Optional list of sub‑steps that must be completed before this step is considered done.
-   * The execution engine will process sub‑steps depth‑first, pushing the parent step
-   * onto a stack while its children are executed.
-   */
-  subSteps?: ExecutionStep[];
-}
-
 interface AgentState {
   mode: 'learn' | 'code'; // Workflow mode
   userInput: string; // Raw user input (prompt for learning or task description for coding)

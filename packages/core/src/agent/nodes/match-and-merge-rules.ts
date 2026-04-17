@@ -1,4 +1,4 @@
-﻿import { AgentState } from '../state';
+﻿import { agentState } from '../state';
 import { rules } from '../../db/schema';
 import { and, sql } from 'drizzle-orm';
 import { Rule } from '../../db/schema';
@@ -103,8 +103,8 @@ Output the merged rule as a complete JSON object, preserving all field structure
 }
 
 export async function matchAndMergeRules(
-  state: typeof AgentState.State,
-): Promise<Partial<typeof AgentState.State>> {
+  state: typeof agentState.State,
+): Promise<Partial<typeof agentState.State>> {
   const finalRules: Rule[] = [];
 
   for (const candidate of state.candidateRules) {

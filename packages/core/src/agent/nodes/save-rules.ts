@@ -1,10 +1,10 @@
-﻿import { AgentState } from '../state';
+﻿import { agentState } from '../state';
 import { dbInstance } from '../../db/client';
 import { rules } from '../../db/schema';
 
 export async function saveRules(
-  state: typeof AgentState.State,
-): Promise<Partial<typeof AgentState.State>> {
+  state: typeof agentState.State,
+): Promise<Partial<typeof agentState.State>> {
   for (const rule of state.finalRules) {
     if (dbInstance.db === null) {
       throw new Error();

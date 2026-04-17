@@ -9,6 +9,7 @@
     "@langchain/langgraph": "^1.2.8",
     "@langchain/openai": "^1.4.4",
     "drizzle-orm": "^0.45.2",
+    "drizzle-zod": "^0.8.3",
     "minimatch": "^10.2.5",
     "pg": "^8.20.0",
     "simple-git": "^3.36.0",

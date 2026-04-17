@@ -1,5 +1,5 @@
 ﻿import { RunnableConfig } from '@langchain/core/runnables';
-import { AgentState } from '../state';
+import { agentState } from '../state';
 import { LLMClient } from '../../llm/client';
 import { z } from 'zod';
 import { Rule } from '../../db/schema';
@@ -11,9 +11,9 @@ const ResponseSchema = z.object({
 });
 
 export async function extractRules(
-  state: typeof AgentState.State,
+  state: typeof agentState.State,
   _config?: RunnableConfig,
-): Promise<Partial<typeof AgentState.State>> {
+): Promise<Partial<typeof agentState.State>> {
   const llm = new LLMClient();
   const candidateRules: Partial<Rule>[] = [];
 

@@ -1,51 +1,49 @@
-﻿import { Annotation } from '@langchain/langgraph';
-import { Rule } from '../db/schemas/rule';
+﻿import { z } from 'zod';
 
-export interface FileDiff {
-  filePath: string;
-  language: string;
-  oldContent: string;
-  newContent: string;
-  hunks: Array<{
-    oldStart: number;
-    oldLines: number;
-    newStart: number;
-    newLines: number;
-    lines: string[];
-  }>;
-}
+export const MainStateSchema = z.object({
+  mode: z.union([z.literal('learn'), z.literal('code')]),
+  userInput: z.string().describe('original user input'),
+  projectRoot: z
+    .string()
+    .default(process.cwd())
+    .describe('current working directory'),
 
-export const AgentState = Annotation.Root({
-  diffs: Annotation<FileDiff[]>({
-    reducer: (_, x) => x,
-    default: () => [],
-  }),
-  message: Annotation<string>({
-    reducer: (_, x) => x,
-    default: () => '',
-  }),
-  projectRoot: Annotation<string>({
-    reducer: (_, x) => x,
-    default: () => process.cwd(),
-  }),
-  analysis: Annotation<{
-    intent: string;
-    frameworks: string[];
-    affectedFiles: string[];
-  } | null>({
-    reducer: (_, x) => x,
-    default: () => null,
-  }),
-  candidateRules: Annotation<Partial<Rule>[]>({
-    reducer: (_, x) => x,
-    default: () => [],
-  }),
-  matchedRules: Annotation<Rule[]>({
-    reducer: (_, x) => x,
-    default: () => [],
-  }),
-  finalRules: Annotation<Rule[]>({
-    reducer: (_, x) => x,
-    default: () => [],
-  }),
+  missingContext: z
+    .array(z.string())
+    .default([])
+    .describe('missing context variable keys'),
+  finalResult: z.string().nullable().default(null).describe('final output'),
+});
+
+export type MainState = z.infer<typeof MainStateSchema>;
+
+export const ExecutionStepSchema = z.object({
+  id: z.string(),
+  description: z.string(),
+  rulesRequired: z.array(z.number()).default([]),
+  get subSteps() {
+    return z.array(ExecutionStepSchema).nullable().default(null);
+  },
+});
+
+export const CodeStateSchema = z.object({
+  userInput: z.string(),
+  projectRoot: z.string().default(process.cwd()),
+
+  triggeredRules: z
+    .array(z.number())
+    .default([])
+    .describe('id array of trigger rules'),
+  activeRuleStack: z
+    .array(z.number())
+    .default([])
+    .describe('active rule stack'),
+  ruleContext: z
+    .record(z.string(), z.unknown())
+    .default({})
+    .describe('loaded context variables'),
+
+  executionPlan: z.array(ExecutionStepSchema).nullable().default(null),
+
+  finalResult: z.string().nullable().default(null),
 });

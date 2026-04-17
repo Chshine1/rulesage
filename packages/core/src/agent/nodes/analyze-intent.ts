@@ -1,5 +1,5 @@
 ﻿import { RunnableConfig } from '@langchain/core/runnables';
-import { AgentState } from '../state';
+import { agentState } from '../state';
 import { LLMClient } from '../../llm/client';
 import { z } from 'zod';
 
@@ -9,9 +9,9 @@ const ResponseSchema = z.object({
 });
 
 export async function analyzeIntent(
-  state: typeof AgentState.State,
+  state: typeof agentState.State,
   _config?: RunnableConfig,
-): Promise<Partial<typeof AgentState.State>> {
+): Promise<Partial<typeof agentState.State>> {
   const llm = new LLMClient();
 
   const firstDiff = state.diffs[0];
