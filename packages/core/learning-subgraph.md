@@ -4,11 +4,6 @@
 
 The Learning Subgraph transforms natural language learning requests (e.g., _"Learn the DDD aggregate conventions in this module"_) into persisted, referenceable rules.
 
-The subgraph is implemented as a self-contained `StateGraph` whose state and dependencies are strictly defined by Zod schemas in the codebase. This document describes the subgraph's _behavior and integration contract_; for precise type definitions, refer to:
-
-- **State schema:** `learning.state.ts` (`LearningStateSchema`)
-- **Dependency schema:** `learning.context.ts` (`LearningContextSchema`)
-
 ---
 
 ## State

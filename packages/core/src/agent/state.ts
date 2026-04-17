@@ -16,34 +16,3 @@ export const MainStateSchema = z.object({
 });
 
 export type MainState = z.infer<typeof MainStateSchema>;
-
-export const ExecutionStepSchema = z.object({
-  id: z.string(),
-  description: z.string(),
-  rulesRequired: z.array(z.number()).default([]),
-  get subSteps() {
-    return z.array(ExecutionStepSchema).nullable().default(null);
-  },
-});
-
-export const CodeStateSchema = z.object({
-  userInput: z.string(),
-  projectRoot: z.string().default(process.cwd()),
-
-  triggeredRules: z
-    .array(z.number())
-    .default([])
-    .describe('id array of trigger rules'),
-  activeRuleStack: z
-    .array(z.number())
-    .default([])
-    .describe('active rule stack'),
-  ruleContext: z
-    .record(z.string(), z.unknown())
-    .default({})
-    .describe('loaded context variables'),
-
-  executionPlan: z.array(ExecutionStepSchema).nullable().default(null),
-
-  finalResult: z.string().nullable().default(null),
-});
