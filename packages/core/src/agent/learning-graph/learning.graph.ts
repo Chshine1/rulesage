@@ -5,13 +5,15 @@
   StateGraph,
 } from '@langchain/langgraph';
 import { LearningState, LearningStateSchema } from './learning.state';
-import { parseLearnIntent } from './nodes/parse-learn-intent';
+import {
+  analyzeScopeAndCodePatterns,
+  generateCandidateRules,
+  parseLearnIntent,
+  proposeNewRules,
+  retrieveRelevantExistingRules,
+  saveOrUpdateRules,
+} from './nodes/index';
 import { LearningContextSchema } from './learning.context';
-import { retrieveRelevantExistingRules } from './nodes/retrieve-relevant-existing-rules';
-import { analyzeScopeAndCodePatterns } from '@rulesage/core/agent/learning-graph/nodes/analyze-scope-and-code-patterns';
-import { generateCandidateRules } from '@rulesage/core/agent/learning-graph/nodes/generate-candidate-rules';
-import { proposeNewRules } from '@rulesage/core/agent/learning-graph/nodes/propose-new-rules';
-import { saveOrUpdateRules } from '@rulesage/core/agent/learning-graph/nodes/save-or-update-rules';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function buildLearningGraph() {

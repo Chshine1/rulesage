@@ -85,12 +85,12 @@ The routing logic is implemented in the `buildLearningGraph` function via a cond
 
 The host environment must inject the following services, as defined by `LearningContextSchema`:
 
-| Service          | Purpose                                            |
-| ---------------- | -------------------------------------------------- |
-| `llm`            | Raw LLM invocation; subgraph handles JSON parsing. |
-| `ruleRepository` | Rule database access.                              |
-| `fileSystem`     | Filesystem access scoped to project root.          |
-| `promptUser`     | Synchronous user interaction callback.             |
+| Service           | Purpose                                            |
+| ----------------- | -------------------------------------------------- |
+| `llm`             | Raw LLM invocation; subgraph handles JSON parsing. |
+| `ruleRepository`  | Rule database access.                              |
+| `fileSystem`      | Filesystem access scoped to project root.          |
+| `interactiveUser` | Synchronous user interaction callback.             |
 
 _See the Zod schema for precise function signatures and return types._
 

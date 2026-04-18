@@ -1,6 +1,6 @@
-﻿import { LearningState } from '@rulesage/core/agent/learning-graph/learning.state';
-import { Runtime } from '@langchain/langgraph';
-import { LearningContext } from '@rulesage/core/agent/learning-graph/learning.context';
+﻿import { Runtime } from '@langchain/langgraph';
+import { LearningState } from '../learning.state';
+import { LearningContext } from '../learning.context';
 
 export function saveOrUpdateRules(
   _state: Pick<LearningState, 'candidateRules' | 'userDecision'>,

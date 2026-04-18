@@ -1,10 +1,10 @@
-﻿import { LearningState } from '@rulesage/core/agent/learning-graph/learning.state';
-import { Runtime } from '@langchain/langgraph';
-import { LearningContext } from '@rulesage/core/agent/learning-graph/learning.context';
+﻿import { Runtime } from '@langchain/langgraph';
+import { LearningState } from '../learning.state';
+import { LearningContext } from '../learning.context';
 
 export function proposeNewRules(
   _state: Pick<LearningState, 'candidateRules' | 'relevantExistingRules'>,
   _runtime: Runtime<Pick<LearningContext, 'interactiveUser'>>,
-): Promise<Partial<LearningState>> {
+): Promise<Pick<LearningState, 'userDecision'>> {
   throw new Error('not implemented');
 }

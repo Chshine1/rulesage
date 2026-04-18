@@ -1,9 +1,22 @@
 ﻿import { z } from 'zod';
-import { ruleSchema } from '@rulesage/core/db/schemas/rule';
+import { ruleSchema } from '../../db/schemas/rule';
 
 export const ScopeSchema = z.object({
   glob: z.string(),
   description: z.string(),
+});
+
+export const ExtractedIntentSchema = z.object({
+  summary: z.string(),
+  targetTags: z.array(z.string().max(20)),
+  keywords: z.array(z.string()),
+});
+
+export const CodePatternSchema = z.object({
+  type: z.string(), // e.g., 'naming_convention', 'decorator_usage', 'error_handling'
+  description: z.string(),
+  examples: z.array(z.string()), // Snippet examples
+  confidence: z.float32(), // 0.0 - 1.0
 });
 
 export const LearningStateSchema = z.object({
@@ -12,15 +25,8 @@ export const LearningStateSchema = z.object({
 
   scopes: z.array(ScopeSchema),
 
-  extractedIntent: z.string(),
-  codePatterns: z.array(
-    z.object({
-      type: z.string(), // e.g., 'naming_convention', 'decorator_usage', 'error_handling'
-      description: z.string(),
-      examples: z.array(z.string()), // Snippet examples
-      confidence: z.float32(), // 0.0 - 1.0
-    }),
-  ),
+  extractedIntent: ExtractedIntentSchema,
+  codePatterns: z.array(CodePatternSchema),
 
   candidateRules: z.array(ruleSchema),
   relevantExistingRules: z.array(ruleSchema),

@@ -1,10 +1,20 @@
-﻿import { LearningState } from '../learning.state';
-import { Runtime } from '@langchain/langgraph';
+﻿import { Runtime } from '@langchain/langgraph';
+import { LearningState } from '../learning.state';
 import { LearningContext } from '../learning.context';
 
-export function retrieveRelevantExistingRules(
-  _state: Pick<LearningState, 'extractedIntent'>,
-  _runtime: Runtime<Pick<LearningContext, 'ruleRepository'>>,
+export async function retrieveRelevantExistingRules(
+  state: Pick<LearningState, 'extractedIntent'>,
+  runtime: Runtime<Pick<LearningContext, 'ruleRepository'>>,
 ): Promise<Partial<LearningState>> {
-  throw new Error('Not implemented');
+  if (runtime.context === undefined) throw new Error('runtime.context');
+
+  const { targetTags } = state.extractedIntent;
+
+  if (targetTags.length === 0) {
+    return { relevantExistingRules: [] };
+  }
+
+  const rules = await runtime.context.ruleRepository.findByTags(targetTags);
+
+  return { relevantExistingRules: rules };
 }
