@@ -7,6 +7,7 @@ using Rulesage.DslRetrieval.Database;
 using Rulesage.DslRetrieval.Database.Entities;
 using Rulesage.DslRetrieval.Options;
 using Rulesage.DslRetrieval.Services.Abstractions;
+using Rulesage.DslRetrieval.Utils;
 
 namespace Rulesage.DslRetrieval.Services.Implementations;
 
@@ -28,9 +29,9 @@ public class DslRetrievalService(
         var queryVector = new Vector(embeddingService.GetEmbedding(query));
 
         var coarseCandidates = await dbContext.DslEntries
-            .OrderBy(e => e.Embedding.CosineDistance(queryVector))
-            .Take(_options.CoarseRecallSize)
             .Select(e => new { Entry = e, CosineDistance = e.Embedding.CosineDistance(queryVector) })
+            .OrderBy(e => e.CosineDistance)
+            .Take(_options.CoarseRecallSize)
             .ToListAsync(cancellationToken);
 
         if (logger.IsEnabled(LogLevel.Debug))
@@ -44,8 +45,8 @@ public class DslRetrievalService(
             {
                 c.Entry,
                 CosineSimilarity = 1.0f - (float)c.CosineDistance,
-                LevelFactor = ComputeLevelFactor(c.Entry.Level, tau),
-                DecayFactor = ComputeDecayFactor(c.Entry)
+                LevelFactor = DslRetrievalUtils.ComputeLevelFactor(c.Entry.Level, tau, _options.LevelAlignmentSigma),
+                DecayFactor = DslRetrievalUtils.ComputeDecayFactor(idfService.ComputeAverageIdf(c.Entry.Description), _options.IdfPenaltyBeta)
             })
             .Select(x => new
             {
@@ -59,18 +60,4 @@ public class DslRetrievalService(
 
         return scoredCandidates;
     }
-
-    private float ComputeLevelFactor(float entryLevel, float targetLevel)
-    {
-        var diff = entryLevel - targetLevel;
-        return MathF.Exp(-(diff * diff) / (2 * _options.LevelAlignmentSigma * _options.LevelAlignmentSigma));
-    }
-
-    private float ComputeDecayFactor(DslEntry entry)
-    {
-        var avgIdf = idfService.ComputeAverageIdf(entry.Description);
-        return 1.0f / (1.0f + _options.IdfPenaltyBeta * avgIdf);
-    }
-
-    public float GetNextLevel(float parentLevel) => Math.Max(0, parentLevel * _options.LevelDecayGamma);
 }
