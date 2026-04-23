@@ -14,8 +14,9 @@ public class DslDbContext(DbContextOptions<DslDbContext> options) : DbContext(op
         modelBuilder.Entity<DslEntry>(entity =>
         {
             entity.HasIndex(e => e.Embedding)
-                .HasMethod("ivfflat")
-                .HasOperators("vector_cosine_ops");
+                .HasMethod("hnsw")
+                .HasOperators("vector_cosine_ops")
+                .HasAnnotation("Npgsql:IndexParameters", "m = 16, ef_construction = 64");
         });
     }
 }
