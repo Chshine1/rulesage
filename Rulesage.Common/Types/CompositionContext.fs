@@ -1,18 +1,21 @@
 ﻿namespace Rulesage.Common.Types
 
-type DslEntryIr = {
-    semanticName: string
-    dslId: DslId
-    description: string
-}
+type AstNodeSignatureIr = string
+type DslEntryIr = string
 
-type AstNodeSignatureIr = {
-    semanticName: string
-    signatureId: AstNodeSignatureId
+type AstNodeSignatureRep = {
+    ir: AstNodeSignatureIr
+    astId: AstNodeSignatureId
     parameters: (AstParamaterKey * string) list
 }
 
+type DslEntryRep = {
+    ir: DslEntryIr
+    dslId: DslEntryId
+    description: string
+}
+
 type CompositionContext = {
-    availableDsls: DslEntryIr list
-    availableAstSignatures: AstNodeSignatureIr list
+    availableAstSignatures: AstNodeSignatureRep list
+    availableDsls: DslEntryRep list
 }

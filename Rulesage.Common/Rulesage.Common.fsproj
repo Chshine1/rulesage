@@ -8,8 +8,9 @@
     <ItemGroup>
         <Compile Include="Types\AstNodeSignature.fs" />
         <Compile Include="Types\DslEntry.fs" />
-        <Compile Include="Types\DslComposition.fs" />
+        <Compile Include="Types\SemanticComposition.fs" />
         <Compile Include="Types\CompositionContext.fs" />
+        <Compile Include="Types\CompositionIr.fs" />
     </ItemGroup>
 
     <ItemGroup>

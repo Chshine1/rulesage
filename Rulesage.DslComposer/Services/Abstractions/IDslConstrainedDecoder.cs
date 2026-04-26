@@ -1,8 +1,12 @@
 ﻿using Rulesage.Common.Types;
+using Rulesage.DslComposer.Types;
 
 namespace Rulesage.DslComposer.Services.Abstractions;
 
 public interface IDslConstrainedDecoder
 {
-    Task<DslEntry> DecodeAsync(string nlTask, string grammar, CancellationToken cancellationToken = default);
+    Task<DslCompositionIr> DecodeAsync(
+        string prompt,
+        Grammar grammar,
+        CancellationToken cancellationToken = default);
 }

@@ -4,5 +4,7 @@ namespace Rulesage.DslComposer.Services.Abstractions;
 
 public interface ICompositionContextBuilder
 {
-    Task<CompositionContext> BuildAsync(CancellationToken cancellationToken = default);
+    Task<CompositionContext> BuildAsync(
+        DslEntry[] prefetchedEntries,
+        CancellationToken cancellationToken = default);
 }

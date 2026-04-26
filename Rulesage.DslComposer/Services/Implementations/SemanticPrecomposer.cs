@@ -5,29 +5,37 @@ using Rulesage.Shared.Services.Abstractions;
 
 namespace Rulesage.DslComposer.Services.Implementations;
 
-public class SemanticPrecomposer(ILlmService llm, JsonSerializerOptions options) : ISemanticPrecomposer
+public class SemanticPrecomposer(ILlmService llm, JsonSerializerOptions jsonOptions) : ISemanticPrecomposer
 {
-    private static string BuildPrompt(string nlTask, CompositionContext compositionContext)
-    {
-        var dslList = compositionContext.availableDsls.Select(d => d.semanticName).Aggregate((a, b) => $"{a}, {b}");
-        return
-            $$"""
-              Given a natural language task, output a JSON structure following this schema:
-              {
-                  "useDsls": ["dsl names from available list: {{dslList}}"],
-                  "context": [{"key": "context name", "value": "natural language description of the AST"}],
-                  "produce": [{"key": "production name", "value": "natural language description of the filled AST"}],
-                  "subtasks": [{"key": "subtask name", "value": "natural language description of what the subtask does"}]
-              }
-              Task: {{nlTask}}
-              """;
-    }
-
-    public async Task<SemanticDslEntry> ComposeAsync(string nlTask, CompositionContext compositionContext,
+    public async Task<SemanticComposition> ComposeAsync(
+        string nlTask,
+        CompositionContext context,
         CancellationToken cancellationToken = default)
     {
-        var prompt = BuildPrompt(nlTask, compositionContext);
-        var response = await llm.CompleteAsync(prompt, cancellationToken);
-        return JsonSerializer.Deserialize<SemanticDslEntry>(response, options) ?? throw new JsonException();
+        var dslList = string.Join(", ", context.availableDsls.Select(d => d.ir));
+        var astList = string.Join(", ",
+            context.availableAstSignatures.Select(a =>
+                $"{a.ir} ({string.Join(", ", a.parameters.Select(p => p.Item1 + ":" + p.Item2))})"));
+
+        var prompt =
+            $$"""
+              Compose a new DSL entry by reusing existing ones.
+              Available DSL entries: {{dslList}}
+              Available AST node signatures and their parameters: {{astList}}
+
+              Task: {{nlTask}}
+
+              Output a JSON object strictly following this schema (but use natural language for descriptions when precise values are not mandated by the schema):
+              {
+                "useDsls": ["<dsl_semantic_name>"],
+                "context": [{"key": "<context_key>", "value": "<description of the required AST>"}],
+                "produce": [{"key": "<production_key>", "value": "<description of the filled AST>"}],
+                "subtasks": [{"key": "<subtask_key>", "value": "<description of what the subtask does>"}]
+              }
+              """;
+
+        var rawJson = await llm.CompleteAsync(prompt, cancellationToken);
+        return JsonSerializer.Deserialize<SemanticComposition>(rawJson, jsonOptions)
+               ?? throw new InvalidOperationException("Failed to parse semantic composition.");
     }
 }

@@ -4,6 +4,8 @@ namespace Rulesage.DslComposer.Services.Abstractions;
 
 public interface ISemanticPrecomposer
 {
-    Task<SemanticDslEntry> ComposeAsync(string nlTask, CompositionContext compositionContext,
+    Task<SemanticComposition> ComposeAsync(
+        string nlTask,
+        CompositionContext context,
         CancellationToken cancellationToken = default);
 }

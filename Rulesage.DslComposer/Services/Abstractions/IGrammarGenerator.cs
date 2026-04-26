@@ -1,8 +1,11 @@
 ﻿using Rulesage.Common.Types;
+using Rulesage.DslComposer.Types;
 
 namespace Rulesage.DslComposer.Services.Abstractions;
 
 public interface IGrammarGenerator
 {
-    Task<string> GenerateAsync(CompositionContext compositionContext, CancellationToken cancellationToken = default);
+    Task<Grammar> GenerateAsync(
+        CompositionContext context,
+        CancellationToken cancellationToken = default);
 }
