@@ -6,7 +6,7 @@ type DslEntryIr = string
 type AstNodeSignatureRep = {
     ir: AstNodeSignatureIr
     astId: AstNodeSignatureId
-    parameters: (AstParamaterKey * string) list
+    parameters: (AstParamaterKey * AstNodeSignatureIr) list
 }
 
 type DslEntryRep = {
@@ -16,6 +16,6 @@ type DslEntryRep = {
 }
 
 type CompositionContext = {
-    availableAstSignatures: AstNodeSignatureRep list
-    availableDsls: DslEntryRep list
+    availableAstSignatures: Map<AstNodeSignatureIr, AstNodeSignatureRep>
+    availableDsls: Map<DslEntryIr, DslEntryRep>
 }

@@ -29,7 +29,10 @@ type AstParametersFilling =
     | FromContext of key: ContextKey
     | FromSubtask of subtaskKey: SubtaskKey * producedKey: ProductionKey
 
-type FilledAst = AstNodeSignatureId * (AstParamaterKey * AstParametersFilling) list
+type FilledAst = {
+    astId: AstNodeSignatureId
+    paramaterFillings: (AstParamaterKey * AstParametersFilling) list
+}
 
 type Subtask =
     // Call a dsl and pass required contexts

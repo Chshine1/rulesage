@@ -4,7 +4,10 @@ type ContextEntryIr =
     | Leaf
     | AstNode of astSemanticName: AstNodeSignatureIr
 
-type FilledAstIr = AstNodeSignatureIr * (AstParamaterKey * AstParametersFilling) list
+type FilledAstIr = {
+    astIr: AstNodeSignatureIr
+    paramaterFillings: (AstParamaterKey * AstParametersFilling) list
+}
 
 type SubtaskIr =
     | DslCall of dslSemanticName: DslEntryIr * context: (ContextKey * FilledAstIr) list
