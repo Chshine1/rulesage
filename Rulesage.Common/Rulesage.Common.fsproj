@@ -6,12 +6,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="Types\AstNodeSignature.fs" />
-        <Compile Include="Types\DslEntry.fs" />
-        <Compile Include="Types\SemanticComposition.fs" />
-        <Compile Include="Types\CompositionContext.fs" />
-        <Compile Include="Types\CompositionIr.fs" />
-        <Compile Include="Types\Synthesis.fs" />
+        <Compile Include="Types\Domain\Primitive.fs" />
+        <Compile Include="Types\Domain\BlueprintValue.fs" />
+        <Compile Include="Types\Domain\OperationBlueprint.fs" />
+        <Compile Include="Types\Composition\CompositionContext.fs" />
+        <Compile Include="Types\Composition\SemanticOperation.fs" />
+        <Compile Include="Types\Synthesis\SynthesizedValue.fs" />
         <Compile Include="Utils\DslIrResolution.fs" />
     </ItemGroup>
 

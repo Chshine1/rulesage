@@ -1,9 +1,10 @@
-﻿using Rulesage.Common.Types;
+﻿using Rulesage.Common.Types.Domain;
+using Rulesage.Common.Types.Synthesis;
 
 namespace Rulesage.Synthesis;
 
 public interface IAstSynthesizer
 {
-    Task<Dictionary<string, SynthesizedValue>> SynthesizeAsync(DslEntry entry,
+    Task<Dictionary<string, SynthesizedNode>> SynthesizeAsync(OperationBlueprint entry,
         CancellationToken cancellationToken = default);
 }

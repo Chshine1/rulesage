@@ -1,7 +1,7 @@
 <Solution>
   <Project Path="Rulesage.Common/Rulesage.Common.fsproj" />
-  <Project Path="Rulesage.DslComposer/Rulesage.DslComposer.csproj" />
-  <Project Path="Rulesage.DslRetrieval/Rulesage.DslRetrieval.csproj" />
+  <Project Path="Rulesage.Composition/Rulesage.Composition.csproj" />
+  <Project Path="Rulesage.Retrieval/Rulesage.Retrieval.csproj" />
   <Project Path="Rulesage.Shared/Rulesage.Shared.csproj" />
   <Project Path="Rulesage.Synthesis/Rulesage.Synthesis.csproj" />
 </Solution>
