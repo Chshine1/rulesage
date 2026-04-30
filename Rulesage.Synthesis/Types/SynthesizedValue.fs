@@ -1,4 +1,4 @@
-﻿namespace Rulesage.Common.Types.Synthesis
+﻿namespace Rulesage.Synthesis.Types
 
 open Rulesage.Common.Types.Domain
 

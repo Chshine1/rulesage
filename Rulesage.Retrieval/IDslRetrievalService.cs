@@ -1,11 +1,11 @@
-﻿using Rulesage.Retrieval.Database.Entities;
+﻿using Rulesage.Common.Types.Domain;
 
 namespace Rulesage.Retrieval;
 
 
 public interface IDslRetrievalService
 {
-    Task<IReadOnlyList<DslEntry>> RetrieveAsync(
+    Task<OperationSignature[]> RetrieveAsync(
         string nlTask,
         float? targetLevel = null,
         CancellationToken cancellationToken = default);

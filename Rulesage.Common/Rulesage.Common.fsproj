@@ -11,7 +11,6 @@
         <Compile Include="Types\Domain\OperationBlueprint.fs" />
         <Compile Include="Types\Composition\CompositionContext.fs" />
         <Compile Include="Types\Composition\SemanticOperation.fs" />
-        <Compile Include="Types\Synthesis\SynthesizedValue.fs" />
         <Compile Include="Utils\DslIrResolution.fs" />
     </ItemGroup>
 
