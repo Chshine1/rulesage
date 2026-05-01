@@ -36,9 +36,14 @@ type SynthesisUnit(
     let rec SynthesizeOperationAsync (): Task<Map<string, SynthesizedNode>> =
         task {
             // TODO: More careful cancellation
-            let outputs = operation.outputs |> Map.map (fun _ -> SynthesizeNodeAsync)
-            let! _ = outputs.Values |> Task.WhenAll
-            return outputs |> Map.map (fun _ v -> v.Result)
+            let! nodePairs =
+                operation.outputs
+                |> Seq.map (fun kv -> task {
+                    let! node = SynthesizeNodeAsync kv.Value
+                    return kv.Key, node
+                })
+                |> Task.WhenAll
+            return nodePairs |> Map.ofSeq
         }
 
     and SynthesizeNodeAsync (node: NodeBlueprint): Task<SynthesizedNode> =
@@ -52,9 +57,14 @@ type SynthesisUnit(
         
     and SynthesizeArgumentsAsync (args: Map<string, BlueprintValue>): Task<Map<string, SynthesizedValue>> =
         task {
-            let tasks = args |> Map.map (fun _ -> SynthesizeValueAsync)
-            let! _ = tasks.Values |> Task.WhenAll
-            return tasks |> Map.map (fun _ v -> v.Result)
+            let! tasks =
+                args
+                |> Seq.map (fun kv -> task {
+                    let! node = SynthesizeValueAsync kv.Value
+                    return kv.Key, node
+                })
+                |> Task.WhenAll
+            return tasks |> Map.ofSeq
         }
     
     and SynthesizeValueAsync (value: BlueprintValue): Task<SynthesizedValue> =
