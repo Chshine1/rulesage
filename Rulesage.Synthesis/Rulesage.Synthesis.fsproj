@@ -11,6 +11,12 @@
         <Compile Include="Services\Abstractions\IConverterService.fs" />
 
         <Compile Include="Services\Abstractions\IOperationService.fs" />
+
+        <Compile Include="Services\Abstractions\INlTaskResolver.fs" />
+
+        <Compile Include="Services\Implementations\NlTaskResolver.fs" />
+
+        <Compile Include="SynthesisUnit.fs" />
       
         <Compile Include="IOperationSynthesizer.fs" />
       
