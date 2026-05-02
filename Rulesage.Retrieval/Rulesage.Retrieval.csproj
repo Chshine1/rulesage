@@ -15,16 +15,16 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Update="Models\all-MiniLM-L6-v2.onnx">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="Models\vocab.txt">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
+      <ProjectReference Include="..\Rulesage.Common\Rulesage.Common.fsproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Rulesage.Common\Rulesage.Common.fsproj" />
+      <EmbeddedResource Include="Resources\model.onnx">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <EmbeddedResource Include="Resources\vocab.txt">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>

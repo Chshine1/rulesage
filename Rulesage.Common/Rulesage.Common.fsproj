@@ -15,6 +15,7 @@
         <Compile Include="Repositories\Abstractions\IDocumentRepository.fs" />
         <Compile Include="Repositories\Implementations\OperationRepository.fs" />
         <Compile Include="Db\Schemas.fs" />
+        <EmbeddedResource Include="Migrations\*.sql" />
     </ItemGroup>
 
     <ItemGroup>

@@ -10,12 +10,23 @@ public static class ServiceCollectionExtensions
 {
     extension(IServiceCollection collection)
     {
-        public IServiceCollection AddDslRetrieval(
+        public IServiceCollection AddOperationRetrieval(
             string onnxModelPath,
             string vocabPath,
             Action<RetrievalOptions>? configureOptions = null)
         {
-            collection.AddSingleton<Tokenizer>(BertTokenizer.Create(vocabPath));
+            collection.AddSingleton<Tokenizer>(WordPieceTokenizer.Create(vocabPath,
+                new WordPieceOptions
+                {
+                    SpecialTokens = new Dictionary<string, int>
+                    {
+                        ["[PAD]"] = 0,
+                        ["[UNK]"] = 100,
+                        ["[CLS]"] = 101,
+                        ["[SEP]"] = 102,
+                        ["[MASK]"] = 103
+                    }
+                }));
 
             collection.Configure(configureOptions ?? (_ => { }));
 
