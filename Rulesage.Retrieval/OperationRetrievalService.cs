@@ -8,7 +8,7 @@ using Rulesage.Retrieval.Utils;
 
 namespace Rulesage.Retrieval;
 
-public class OperationRetrievalService(
+internal class OperationRetrievalService(
     IEmbeddingService embeddingService,
     IOperationRepository operationRepository,
     IOperationIdfService idfService,

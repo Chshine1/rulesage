@@ -6,7 +6,7 @@ using Rulesage.Retrieval.Services.Abstractions;
 
 namespace Rulesage.Retrieval.Services.Implementations;
 
-public class IdfService<TRepository>: IIdfService where TRepository : IDocumentRepository
+internal class IdfService<TRepository>: IIdfService where TRepository : IDocumentRepository
 {
     private readonly Tokenizer _tokenizer;
     private readonly IServiceScopeFactory _scopeFactory;
@@ -59,5 +59,5 @@ public class IdfService<TRepository>: IIdfService where TRepository : IDocumentR
     private record IdfData(Dictionary<int, float> IdfMap, float DefaultIdf);
 }
 
-public class OperationIdfService(IServiceScopeFactory scopeFactory, Tokenizer tokenizer)
+internal class OperationIdfService(IServiceScopeFactory scopeFactory, Tokenizer tokenizer)
     : IdfService<OperationRepository>(scopeFactory, tokenizer), IOperationIdfService;
