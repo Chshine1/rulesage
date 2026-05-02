@@ -2,8 +2,9 @@
 
 open Rulesage.Common.Types.Domain
 
-type CompositionContext = {
-    nodes: Map<string, Identifier>
-    converters: Map<string, Identifier>
-    operations: Map<string, Identifier>
-}
+type CompositionContext =
+    {
+        nodes: Map<string, Identifier>
+        converters: Map<string, Identifier>
+        operations: Map<string, Identifier>
+    }

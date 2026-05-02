@@ -5,7 +5,8 @@ type Subtask =
     | InvokeConverter of converter: Identifier * args: Map<string, BlueprintValue>
     | NlTask of template: string
 
-type OperationBlueprint = {
-    subtasks: Map<string, Subtask>
-    outputs: Map<string, NodeBlueprint>
-}
+type OperationBlueprint =
+    {
+        subtasks: Map<string, Subtask>
+        outputs: Map<string, NodeBlueprint>
+    }

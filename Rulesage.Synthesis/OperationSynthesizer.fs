@@ -2,10 +2,7 @@
 
 open Rulesage.Synthesis.Services.Abstractions
 
-type OperationSynthesizer(
-    synthesisUnitFactory: SynthesisUnitFactory,
-    nlTaskResolver: INlTaskResolver
-) =
+type OperationSynthesizer(synthesisUnitFactory: SynthesisUnitFactory, nlTaskResolver: INlTaskResolver) =
     interface IOperationSynthesizer with
         member this.SynthesizeNlTaskAsync(nlTask, cancellationToken) =
             task {

@@ -1,5 +1,3 @@
 ﻿namespace Rulesage.Common.Types.Composition
 
-type SemanticOperation = {
-    operations: string list
-}
+type SemanticOperation = { operations: string list }

@@ -25,7 +25,7 @@ let createOperationsTableSql =
         outputs            JSONB NOT NULL
     );
     """
-    
+
 /// <summary>
 /// Table: operations
 /// F# types: OperationBlueprint(subtasks, outputs) + OperationSignature(parameters, outputs)
