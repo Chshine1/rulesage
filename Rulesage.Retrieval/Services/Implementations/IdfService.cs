@@ -60,4 +60,4 @@ public class IdfService<TRepository>: IIdfService where TRepository : IDocumentR
 }
 
 public class OperationIdfService(IServiceScopeFactory scopeFactory, Tokenizer tokenizer)
-    : IdfService<OperationRepository>(scopeFactory, tokenizer);
+    : IdfService<OperationRepository>(scopeFactory, tokenizer), IOperationIdfService;

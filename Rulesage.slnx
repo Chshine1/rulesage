@@ -1,6 +1,7 @@
 <Solution>
   <Project Path="Rulesage.Common/Rulesage.Common.fsproj" />
   <Project Path="Rulesage.Composition/Rulesage.Composition.csproj" />
+  <Project Path="Rulesage.Retrieval.Tests/Rulesage.Retrieval.Tests.csproj" />
   <Project Path="Rulesage.Retrieval/Rulesage.Retrieval.csproj" />
   <Project Path="Rulesage.Shared/Rulesage.Shared.csproj" />
   <Project Path="Rulesage.Synthesis/Rulesage.Synthesis.fsproj" />

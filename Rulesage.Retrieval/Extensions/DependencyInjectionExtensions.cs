@@ -19,7 +19,7 @@ public static class ServiceCollectionExtensions
 
             collection.Configure(configureOptions ?? (_ => { }));
 
-            collection.AddSingleton<OperationIdfService>();
+            collection.AddSingleton<IOperationIdfService, OperationIdfService>();
 
             collection.AddSingleton<IEmbeddingService>(sp =>
                 new OnnxEmbeddingService(sp.GetRequiredService<Tokenizer>(), onnxModelPath));

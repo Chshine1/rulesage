@@ -4,7 +4,6 @@ using Rulesage.Common.Repositories.Abstractions;
 using Rulesage.Common.Types.Domain;
 using Rulesage.Retrieval.Options;
 using Rulesage.Retrieval.Services.Abstractions;
-using Rulesage.Retrieval.Services.Implementations;
 using Rulesage.Retrieval.Utils;
 
 namespace Rulesage.Retrieval;
@@ -12,7 +11,7 @@ namespace Rulesage.Retrieval;
 public class OperationRetrievalService(
     IEmbeddingService embeddingService,
     IOperationRepository operationRepository,
-    OperationIdfService idfService,
+    IOperationIdfService idfService,
     IOptions<RetrievalOptions> options,
     ILogger<OperationRetrievalService> logger)
     : IOperationRetrievalService

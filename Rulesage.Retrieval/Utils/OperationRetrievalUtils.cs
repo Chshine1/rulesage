@@ -1,4 +1,7 @@
-﻿namespace Rulesage.Retrieval.Utils;
+﻿using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Rulesage.Retrieval.Tests")]
+namespace Rulesage.Retrieval.Utils;
 
 internal static class OperationRetrievalUtils
 {
