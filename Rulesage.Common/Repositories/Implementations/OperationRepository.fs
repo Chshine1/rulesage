@@ -5,12 +5,27 @@ open Npgsql
 open Rulesage.Common.Repositories.Abstractions
 open Rulesage.Common.Types.Domain
 
-type OperationRepository(jsonOptions: JsonSerializerOptions) =
+type OperationRepository(dataSource: NpgsqlDataSource, jsonOptions: JsonSerializerOptions) =
+    interface IDocumentRepository with
+        member _.GetDocumentsAsync(cancellationToken) =
+            task {
+                use conn = dataSource.CreateConnection()
+                do! conn.OpenAsync(cancellationToken)
+
+                use cmd = new NpgsqlCommand("SELECT description FROM operations", conn)
+                use! reader = cmd.ExecuteReaderAsync(cancellationToken)
+
+                return
+                    seq {
+                        while reader.Read() do
+                            yield reader.GetString(0)
+                    }
+            }
+
     interface IOperationRepository with
         member _.FindByIdAsync(id, cancellationToken) =
             task {
-                let connectionString = ""
-                use conn = new NpgsqlConnection(connectionString)
+                use conn = dataSource.CreateConnection()
                 do! conn.OpenAsync(cancellationToken)
 
                 use cmd =
@@ -41,8 +56,7 @@ type OperationRepository(jsonOptions: JsonSerializerOptions) =
 
         member _.FindOrderByCosineDistance(queryVector, take, cancellationToken) =
             task {
-                let connectionString = ""
-                use conn = new NpgsqlConnection(connectionString)
+                use conn = dataSource.CreateConnection()
                 do! conn.OpenAsync(cancellationToken)
 
                 use cmd =
@@ -52,6 +66,7 @@ type OperationRepository(jsonOptions: JsonSerializerOptions) =
                             id,
                             ir,
                             description,
+                            level,
                             signature_params,
                             signature_outputs,
                             (embedding <=> $1) AS distance
@@ -70,10 +85,10 @@ type OperationRepository(jsonOptions: JsonSerializerOptions) =
                     seq {
                         while reader.Read() do
                             let parameters =
-                                JsonSerializer.Deserialize<Map<string, ParamType>>(reader.GetString(3), jsonOptions)
+                                JsonSerializer.Deserialize<Map<string, ParamType>>(reader.GetString(4), jsonOptions)
 
                             let outputs =
-                                JsonSerializer.Deserialize<Map<string, ParamType>>(reader.GetString(4), jsonOptions)
+                                JsonSerializer.Deserialize<Map<string, ParamType>>(reader.GetString(5), jsonOptions)
 
                             yield
                                 {
@@ -83,10 +98,11 @@ type OperationRepository(jsonOptions: JsonSerializerOptions) =
                                             ir = reader.GetString(1)
                                         }
                                     description = reader.GetString(2)
+                                    level = reader.GetFloat(3)
                                     parameters = parameters
                                     outputs = outputs
                                 },
-                                float32 (reader.GetDouble(5))
+                                float32 (reader.GetDouble(6))
                     }
                     |> Seq.toArray
             }

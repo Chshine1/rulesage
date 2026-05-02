@@ -1,50 +1,48 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.ML.Tokenizers;
-using Rulesage.Retrieval.Database;
+using Rulesage.Common.Repositories.Abstractions;
+using Rulesage.Common.Repositories.Implementations;
 using Rulesage.Retrieval.Services.Abstractions;
 
 namespace Rulesage.Retrieval.Services.Implementations;
 
-internal class IdfService: IIdfService
+public class IdfService<TRepository>: IIdfService where TRepository : IDocumentRepository
 {
     private readonly Tokenizer _tokenizer;
     private readonly IServiceScopeFactory _scopeFactory;
-    private readonly Lazy<IdfData> _data;
+    private readonly Lazy<Task<IdfData>> _data;
 
-    public IdfService(IServiceScopeFactory scopeFactory, Tokenizer tokenizer)
+    protected IdfService(IServiceScopeFactory scopeFactory, Tokenizer tokenizer)
     {
         _tokenizer = tokenizer;
         _scopeFactory = scopeFactory;
-        _data = new Lazy<IdfData>(LoadIdfData, LazyThreadSafetyMode.ExecutionAndPublication);
+        _data = new Lazy<Task<IdfData>>(LoadIdfData, LazyThreadSafetyMode.ExecutionAndPublication);
     }
 
-    public float ComputeAverageIdf(string text)
+    public async Task<float> ComputeAverageIdfAsync(string text, CancellationToken cancellationToken = default)
     {
         var terms = _tokenizer.EncodeToIds(text);
         if (terms.Count == 0) return 0f;
         
-        var data = _data.Value;
+        var data = await _data.Value;
         var sum = terms.Sum(term => data.IdfMap.GetValueOrDefault(term, data.DefaultIdf));
         return sum / terms.Count;
     }
     
-    private IdfData LoadIdfData()
+    private async Task<IdfData> LoadIdfData()
     {
         using var scope = _scopeFactory.CreateScope();
-        var db = scope.ServiceProvider.GetRequiredService<DslDbContext>();
+        var db = scope.ServiceProvider.GetRequiredService<TRepository>();
 
-        var documents = db.DslEntries
-            .AsNoTracking()
-            .Select(d => d.Description)
-            .ToArray();
+        var documents = await db.GetDocumentsAsync();
 
-        var docCount = documents.Length;
+        var docCount = 0;
         var termDocFreq = new Dictionary<int, int>();
         var idfMap = new Dictionary<int, float>();
 
         foreach (var term in documents.SelectMany(doc => _tokenizer.EncodeToIds(doc).Distinct()))
         {
+            docCount++;
             termDocFreq[term] = termDocFreq.GetValueOrDefault(term) + 1;
         }
 
@@ -60,3 +58,6 @@ internal class IdfService: IIdfService
     
     private record IdfData(Dictionary<int, float> IdfMap, float DefaultIdf);
 }
+
+public class OperationIdfService(IServiceScopeFactory scopeFactory, Tokenizer tokenizer)
+    : IdfService<OperationRepository>(scopeFactory, tokenizer);

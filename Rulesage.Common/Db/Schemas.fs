@@ -19,6 +19,7 @@ let createOperationsTableSql =
         ir                 VARCHAR(64) NOT NULL,
         description        TEXT NOT NULL,
         embedding          VECTOR(384) NOT NULL,
+        level              REAL NOT NULL,
         signature_params   JSONB NOT NULL,
         signature_outputs  JSONB NOT NULL,
         subtasks           JSONB NOT NULL,

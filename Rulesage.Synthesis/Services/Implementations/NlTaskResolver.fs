@@ -4,7 +4,7 @@ open Rulesage.Composition
 open Rulesage.Retrieval
 open Rulesage.Synthesis.Services.Abstractions
 
-type NlTaskResolver(dslRetrievalService: IDslRetrievalService, operationComposer: IOperationComposer) =
+type NlTaskResolver(dslRetrievalService: IOperationRetrievalService, operationComposer: IOperationComposer) =
     interface INlTaskResolver with
         member this.ResolveAsync cancellationToken nlTask =
             task {

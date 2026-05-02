@@ -2,5 +2,5 @@
 
 public interface IIdfService
 {
-    float ComputeAverageIdf(string text);
+    Task<float> ComputeAverageIdfAsync(string text, CancellationToken cancellationToken = default);
 }

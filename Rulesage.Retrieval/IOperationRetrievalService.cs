@@ -3,7 +3,7 @@
 namespace Rulesage.Retrieval;
 
 
-public interface IDslRetrievalService
+public interface IOperationRetrievalService
 {
     Task<OperationSignature[]> RetrieveAsync(
         string nlTask,

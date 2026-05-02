@@ -25,6 +25,7 @@ type OperationSignature =
     {
         id: Identifier
         description: string
+        level: float32
         parameters: Map<string, ParamType>
         outputs: Map<string, ParamType>
     }

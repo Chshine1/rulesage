@@ -1,6 +1,6 @@
 ﻿namespace Rulesage.Retrieval.Utils;
 
-internal static class DslRetrievalUtils
+internal static class OperationRetrievalUtils
 {
     internal static float ComputeLevelFactor(float entryLevel, float targetLevel, float levelAlignmentSigma)
     {
