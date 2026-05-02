@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.ML.Tokenizers;
-using Rulesage.Common.Repositories.Abstractions;
-using Rulesage.Common.Repositories.Implementations;
-using Rulesage.Retrieval.Services.Abstractions;
+using Rulesage.Shared.Repositories.Abstractions;
+using Rulesage.Shared.Repositories.Implementations;
+using Rulesage.Shared.Services.Abstractions;
 
-namespace Rulesage.Retrieval.Services.Implementations;
+namespace Rulesage.Shared.Services.Implementations;
 
 internal class IdfService<TRepository>: IIdfService where TRepository : IDocumentRepository
 {

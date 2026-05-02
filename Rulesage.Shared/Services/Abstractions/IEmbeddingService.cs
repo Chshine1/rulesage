@@ -1,4 +1,4 @@
-﻿namespace Rulesage.Retrieval.Services.Abstractions;
+﻿namespace Rulesage.Shared.Services.Abstractions;
 
 public interface IEmbeddingService
 {

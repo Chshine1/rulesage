@@ -1,9 +1,9 @@
 ﻿using Microsoft.ML.OnnxRuntime;
 using Microsoft.ML.OnnxRuntime.Tensors;
 using Microsoft.ML.Tokenizers;
-using Rulesage.Retrieval.Services.Abstractions;
+using Rulesage.Shared.Services.Abstractions;
 
-namespace Rulesage.Retrieval.Services.Implementations;
+namespace Rulesage.Shared.Services.Implementations;
 
 internal class OnnxEmbeddingService(Tokenizer tokenizer, string modelPath): IEmbeddingService, IDisposable
 {

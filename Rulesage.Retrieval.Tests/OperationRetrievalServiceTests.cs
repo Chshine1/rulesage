@@ -3,11 +3,11 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Microsoft.FSharp.Collections;
 using Moq;
-using Rulesage.Common.Repositories.Abstractions;
 using Rulesage.Common.Types.Domain;
 using Rulesage.Retrieval.Options;
-using Rulesage.Retrieval.Services.Abstractions;
 using Rulesage.Retrieval.Utils;
+using Rulesage.Shared.Repositories.Abstractions;
+using Rulesage.Shared.Services.Abstractions;
 
 namespace Rulesage.Retrieval.Tests;
 
@@ -22,7 +22,7 @@ public class OperationRetrievalServiceTests
     }
 
     private static Mock<IOperationRepository> CreateRepositoryMock(
-        Tuple<OperationSignature, float>[] candidatesToReturn)
+        IEnumerable<(OperationSignature, float)> candidatesToReturn)
     {
         var mock = new Mock<IOperationRepository>();
         mock.Setup(r => r.FindOrderByCosineDistance(
@@ -59,7 +59,7 @@ public class OperationRetrievalServiceTests
     private static OptionsWrapper<RetrievalOptions> WrapOptions(RetrievalOptions options) => new(options);
 
     private static OperationSignature[] ComputeExpectedTopK(
-        Tuple<OperationSignature, float>[] coarseCandidates,
+        (OperationSignature, float)[] coarseCandidates,
         Dictionary<string, float> idfMap,
         float tau,
         RetrievalOptions options)
@@ -96,18 +96,18 @@ public class OperationRetrievalServiceTests
     {
         // Arrange
         var embeddingVector = new[] { 1.0f, 2.0f };
-        var ops = new Tuple<OperationSignature, float>[]
+        var ops = new[]
         {
-            new (CreateOp(1, "desc1", 0.8f), 0.2f),
-            new (CreateOp(2, "desc2", 1.2f), 0.25f),
-            new (CreateOp(3, "desc3", 1.0f), 0.1f),
-            new (CreateOp(4, "desc4", 0.9f), 0.15f),
-            new (CreateOp(5, "desc5", 1.1f), 0.3f),
-            new (CreateOp(6, "desc6", 0.7f), 0.05f),
-            new (CreateOp(7, "desc7", 1.3f), 0.4f),
-            new (CreateOp(8, "desc8", 1.5f), 0.22f),
-            new (CreateOp(9, "desc9", 1.0f), 0.18f),
-            new (CreateOp(10, "desc10", 0.6f), 0.12f)
+            (CreateOp(1, "desc1", 0.8f), 0.2f),
+            (CreateOp(2, "desc2", 1.2f), 0.25f),
+            (CreateOp(3, "desc3", 1.0f), 0.1f),
+            (CreateOp(4, "desc4", 0.9f), 0.15f),
+            (CreateOp(5, "desc5", 1.1f), 0.3f),
+            (CreateOp(6, "desc6", 0.7f), 0.05f),
+            (CreateOp(7, "desc7", 1.3f), 0.4f),
+            (CreateOp(8, "desc8", 1.5f), 0.22f),
+            (CreateOp(9, "desc9", 1.0f), 0.18f),
+            (CreateOp(10, "desc10", 0.6f), 0.12f)
         };
         var idfMap = new Dictionary<string, float>
         {
@@ -143,10 +143,10 @@ public class OperationRetrievalServiceTests
     public async Task RetrieveAsync_FewerCandidatesThanTopK_ReturnsAllInOrder()
     {
         var embedding = new[] { 0.5f };
-        var ops = new Tuple<OperationSignature, float>[]
+        var ops = new[]
         {
-            new (CreateOp(1, "d1", 1.0f), 0.1f),
-            new (CreateOp(2, "d2", 0.8f), 0.3f)
+            (CreateOp(1, "d1", 1.0f), 0.1f),
+            (CreateOp(2, "d2", 0.8f), 0.3f)
         };
         var idfMap = new Dictionary<string, float> { ["d1"] = 0.2f, ["d2"] = 0.5f };
         var options = new RetrievalOptions
@@ -195,7 +195,7 @@ public class OperationRetrievalServiceTests
     public async Task RetrieveAsync_CandidatesEqualToTopK_ReturnsAll()
     {
         var ops = Enumerable.Range(1, 5)
-            .Select(i => new Tuple<OperationSignature, float>(CreateOp(i, $"desc{i}", 1.0f), 0.1f * i))
+            .Select(i => (CreateOp(i, $"desc{i}", 1.0f), 0.1f * i))
             .ToArray();
         var idfMap = ops.ToDictionary(
             t => t.Item1.description,
@@ -220,10 +220,10 @@ public class OperationRetrievalServiceTests
     {
         var op1 = CreateOp(1, "desc1", 0.9f);
         var op2 = CreateOp(2, "desc2", 2.0f);
-        var ops = new Tuple<OperationSignature, float>[]
+        var ops = new[]
         {
-            new (op1, 0.1f), // cosine sim = 0.9
-            new (op2, 0.1f) // cosine sim = 0.9
+            (op1, 0.1f), // cosine sim = 0.9
+            (op2, 0.1f) // cosine sim = 0.9
         };
         var idfMap = new Dictionary<string, float> { ["desc1"] = 0.0f, ["desc2"] = 0.0f };
 
@@ -252,10 +252,10 @@ public class OperationRetrievalServiceTests
     {
         var op1 = CreateOp(1, "desc1", 1.0f);
         var op2 = CreateOp(2, "desc2", 1.0f);
-        var ops = new Tuple<OperationSignature, float>[]
+        var ops = new[]
         {
-            new (op1, 0.2f), // cosine sim = 0.8
-            new (op2, 0.2f) // cosine sim = 0.8
+            (op1, 0.2f), // cosine sim = 0.8
+            (op2, 0.2f) // cosine sim = 0.8
         };
         var idfMap = new Dictionary<string, float> { ["desc1"] = 0.1f, ["desc2"] = 0.9f };
 
@@ -284,10 +284,10 @@ public class OperationRetrievalServiceTests
     {
         var opClose = CreateOp(1, "desc1", 0.5f);
         var opFar = CreateOp(2, "desc2", 1.5f);
-        var ops = new Tuple<OperationSignature, float>[]
+        var ops = new[]
         {
-            new (opClose, 0.1f),
-            new (opFar, 0.1f)
+            (opClose, 0.1f),
+            (opFar, 0.1f)
         };
         var idfMap = new Dictionary<string, float> { ["desc1"] = 0f, ["desc2"] = 0f };
 
@@ -329,7 +329,7 @@ public class OperationRetrievalServiceTests
                 It.IsAny<CancellationToken>()))
             .Callback<float[], int, CancellationToken>((_, _, ct) => capturedRepoToken = ct)
             .ReturnsAsync([
-                new Tuple<OperationSignature, float>(CreateOp(1, "d1", 1.0f), 0.2f)
+                (CreateOp(1, "d1", 1.0f), 0.2f)
             ]);
 
         var mockIdf = new Mock<IOperationIdfService>();
@@ -381,9 +381,9 @@ public class OperationRetrievalServiceTests
     [Fact]
     public async Task RetrieveAsync_WhenLogLevelDebug_LogsCandidateCount()
     {
-        var ops = new Tuple<OperationSignature, float>[]
+        var ops = new[]
         {
-            new (CreateOp(1, "desc", 1.0f), 0.1f)
+            (CreateOp(1, "desc", 1.0f), 0.1f)
         };
         var mockLogger = new Mock<ILogger<OperationRetrievalService>>();
         mockLogger.Setup(l => l.IsEnabled(LogLevel.Debug)).Returns(true);

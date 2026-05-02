@@ -11,9 +11,6 @@
         <Compile Include="Types\Domain\OperationBlueprint.fs" />
         <Compile Include="Types\Composition\CompositionContext.fs" />
         <Compile Include="Types\Composition\SemanticOperation.fs" />
-        <Compile Include="Repositories\Abstractions\IOperationRepository.fs" />
-        <Compile Include="Repositories\Abstractions\IDocumentRepository.fs" />
-        <Compile Include="Repositories\Implementations\OperationRepository.fs" />
         <Compile Include="Db\Schemas.fs" />
         <EmbeddedResource Include="Migrations\*.sql" />
     </ItemGroup>

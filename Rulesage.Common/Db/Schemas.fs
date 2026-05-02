@@ -38,7 +38,7 @@ let createOperationsTableSql =
 /// </summary>
 let createNodesTableSql =
     """
-    CREATE TABLE operations (
+    CREATE TABLE nodes (
         id                 INT  GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
         ir                 VARCHAR(64) NOT NULL,
         description        TEXT NOT NULL,

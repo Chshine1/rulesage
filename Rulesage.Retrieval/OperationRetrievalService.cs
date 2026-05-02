@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Rulesage.Common.Repositories.Abstractions;
 using Rulesage.Common.Types.Domain;
 using Rulesage.Retrieval.Options;
-using Rulesage.Retrieval.Services.Abstractions;
 using Rulesage.Retrieval.Utils;
+using Rulesage.Shared.Repositories.Abstractions;
+using Rulesage.Shared.Services.Abstractions;
 
 namespace Rulesage.Retrieval;
 
@@ -25,13 +25,15 @@ internal class OperationRetrievalService(
     {
         var queryVector = embeddingService.GetEmbedding(nlTask);
 
-        var coarseCandidates = await operationRepository.FindOrderByCosineDistance(queryVector, _options.CoarseRecallSize, cancellationToken);
+        var coarseCandidates =
+            (await operationRepository.FindOrderByCosineDistance(queryVector, _options.CoarseRecallSize,
+                cancellationToken)).ToArray();
 
         if (logger.IsEnabled(LogLevel.Debug))
         {
             logger.LogDebug("Coarse recall returned {Count} candidates", coarseCandidates.Length);
         }
-        
+
         var tau = targetLevel ?? 1.0f;
         var idfTasks = coarseCandidates
             .Select(c => idfService.ComputeAverageIdfAsync(c.Item1.description, cancellationToken));

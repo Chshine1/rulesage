@@ -10,12 +10,11 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.7" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.7" />
         <PackageReference Include="Microsoft.Extensions.Options" Version="10.0.7" />
-        <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.25.0" />
-        <PackageReference Include="Microsoft.ML.Tokenizers" Version="2.0.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Rulesage.Common\Rulesage.Common.fsproj" />
+      <ProjectReference Include="..\Rulesage.Shared\Rulesage.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -25,6 +24,11 @@
       <EmbeddedResource Include="Resources\vocab.txt">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Services\Abstractions\" />
+      <Folder Include="Services\Implementations\" />
     </ItemGroup>
 
 </Project>
