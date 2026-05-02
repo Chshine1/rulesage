@@ -29,6 +29,17 @@ type SynthesisUnit(
             | None -> failwithf $"Missing argument key: %s{key}"
         )
         
+    let internalCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken)
+    
+    let whenAll (tasks: seq<Task<'T>>) = 
+        task {
+            try
+                return! Task.WhenAll(tasks)
+            with ex ->
+                internalCts.Cancel()
+                return! Task.FromException<'T[]>(ex)
+        }
+        
     let formattedArgs = operationArgs |> Map.map (fun _ a -> JsonSerializer.Serialize(a, jsonOptions))
     
     let subtasksCache = ConcurrentDictionary<string, Task<SynthesizedValue>>()
@@ -42,7 +53,7 @@ type SynthesisUnit(
                     let! node = SynthesizeNodeAsync kv.Value
                     return kv.Key, node
                 })
-                |> Task.WhenAll
+                |> whenAll
             return nodePairs |> Map.ofSeq
         }
 
@@ -63,7 +74,7 @@ type SynthesisUnit(
                     let! node = SynthesizeValueAsync kv.Value
                     return kv.Key, node
                 })
-                |> Task.WhenAll
+                |> whenAll
             return tasks |> Map.ofSeq
         }
     
@@ -90,11 +101,11 @@ type SynthesisUnit(
                         match s with
                         | Subtask.InvokeConverter (converter, converterArgs) ->
                             let! synArgs = SynthesizeArgumentsAsync converterArgs
-                            return converterService.Convert converter.id synArgs
+                            return! converterService.ConvertAsync internalCts.Token converter.id synArgs
                         | Subtask.InvokeOperation (subOp, subArgs) ->
                             let bp = operationService.FindOne subOp true
                             let! args = SynthesizeArgumentsAsync subArgs
-                            let subUnit = factory.Create cancellationToken bp args
+                            let subUnit = factory.Create internalCts.Token bp args
                             let! outputs = subUnit.SynthesizeAsync()
                             return outputs |> Map.find outputKey |> SynthesizedValue.Node
                         | Subtask.NlTask template ->
@@ -107,10 +118,9 @@ type SynthesisUnit(
         
     and SynthesizeNlTaskAsync (nlTask: string) =
         task {
-            let! op = nlTaskResolver.ResolveAsync cancellationToken nlTask
-            let unit = factory.Create cancellationToken op Map.empty
-            let! result = unit.SynthesizeAsync()
-            return result
+            let! op = nlTaskResolver.ResolveAsync internalCts.Token nlTask
+            let unit = factory.Create internalCts.Token op Map.empty
+            return! unit.SynthesizeAsync()
         }
         
     member _.SynthesizeAsync (): Task<Map<string, SynthesizedNode>> =

@@ -1,6 +1,8 @@
 ﻿namespace Rulesage.Synthesis.Services.Abstractions
 
+open System.Threading
+open System.Threading.Tasks
 open Rulesage.Synthesis.Types
 
 type IConverterService =
-    abstract member Convert: converterId: int -> args: Map<string, SynthesizedValue> -> SynthesizedValue
+    abstract member ConvertAsync: cancellationToken: CancellationToken -> converterId: int -> args: Map<string, SynthesizedValue> -> Task<SynthesizedValue>
