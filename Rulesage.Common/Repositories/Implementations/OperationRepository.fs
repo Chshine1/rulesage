@@ -7,7 +7,7 @@ open Rulesage.Common.Types.Domain
 
 type OperationRepository(jsonOptions: JsonSerializerOptions) =
     interface IOperationRepository with
-        member this.FindByIdAsync(cancellationToken, id) = task {
+        member _.FindByIdAsync(id, cancellationToken) = task {
             let connectionString = ""
             use conn = new NpgsqlConnection(connectionString)
             do! conn.OpenAsync(cancellationToken)
@@ -24,3 +24,41 @@ type OperationRepository(jsonOptions: JsonSerializerOptions) =
                 return None
         }
         
+        member _.FindOrderByCosineDistance(queryVector, take, cancellationToken) = task {
+            let connectionString = ""
+            use conn = new NpgsqlConnection(connectionString)
+            do! conn.OpenAsync(cancellationToken)
+            use cmd = new NpgsqlCommand(
+                """
+                SELECT
+                    id,
+                    ir,
+                    description,
+                    signature_params,
+                    signature_outputs,
+                    (embedding <=> $1) AS distance
+                FROM operations
+                ORDER BY embedding <=> $1
+                LIMIT $2;
+                """
+            , conn)
+            cmd.Parameters.Add(queryVector) |> ignore
+            cmd.Parameters.Add(take) |> ignore
+            use! reader = cmd.ExecuteReaderAsync(cancellationToken)
+            return 
+                seq {
+                    while reader.Read() do
+                        let parameters = JsonSerializer.Deserialize<Map<string, ParamType>>(reader.GetString(3), jsonOptions)
+                        let outputs = JsonSerializer.Deserialize<Map<string, ParamType>>(reader.GetString(4), jsonOptions)
+                        yield
+                            {
+                                id = {
+                                    id = reader.GetInt32(0)
+                                    ir = reader.GetString(1)
+                                }
+                                description = reader.GetString(2)
+                                parameters = parameters
+                                outputs = outputs
+                            }, float32(reader.GetDouble(5))
+                } |> Seq.toArray
+        }

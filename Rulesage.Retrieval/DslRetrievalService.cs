@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Pgvector;
 using Pgvector.EntityFrameworkCore;
+using Rulesage.Common.Types.Domain;
 using Rulesage.Retrieval.Database;
 using Rulesage.Retrieval.Database.Entities;
 using Rulesage.Retrieval.Options;
@@ -21,7 +22,7 @@ public class DslRetrievalService(
 {
     private readonly RetrievalOptions _options = options.Value;
 
-    public async Task<IReadOnlyList<DslEntry>> RetrieveAsync(
+    public async Task<OperationSignature[]> RetrieveAsync(
         string nlTask,
         float? targetLevel = null,
         CancellationToken cancellationToken = default)
