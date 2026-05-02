@@ -103,7 +103,7 @@ type SynthesisUnit(
                             let! synArgs = SynthesizeArgumentsAsync converterArgs
                             return! converterService.ConvertAsync internalCts.Token converter.id synArgs
                         | Subtask.InvokeOperation (subOp, subArgs) ->
-                            let bp = operationService.FindOne subOp true
+                            let bp = operationService.FindOneById subOp.id
                             let! args = SynthesizeArgumentsAsync subArgs
                             let subUnit = factory.Create internalCts.Token bp args
                             let! outputs = subUnit.SynthesizeAsync()

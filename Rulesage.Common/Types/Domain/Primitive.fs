@@ -11,17 +11,20 @@ type ParamType =
 
 type Node = {
     id: Identifier
+    description: string
     parameters: Map<string, ParamType>
 }
 
 type Converter = {
     id: Identifier
+    description: string
     parameters: Map<string, ParamType>
     outputs: Map<string, ParamType>
 }
     
 type OperationSignature = {
     id: Identifier
+    description: string
     parameters: Map<string, ParamType>
     outputs: Map<string, ParamType>
 }
