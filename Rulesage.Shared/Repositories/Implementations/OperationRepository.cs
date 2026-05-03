@@ -44,7 +44,8 @@ public class OperationRepository(NpgsqlDataSource dataSource, JsonSerializerOpti
         return new OperationBlueprint(subtasks, outputs);
     }
 
-    public async Task<IEnumerable<(OperationSignature, float)>> FindOrderByCosineDistance(float[] queryVector, int take,
+    public async Task<IEnumerable<(OperationSignature, float)>> FindOrderByCosineDistanceAsync(float[] queryVector,
+        int skip, int take,
         CancellationToken cancellationToken = default)
     {
         await using var conn = dataSource.CreateConnection();

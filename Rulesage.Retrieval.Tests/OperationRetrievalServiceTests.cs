@@ -25,8 +25,9 @@ public class OperationRetrievalServiceTests
         IEnumerable<(OperationSignature, float)> candidatesToReturn)
     {
         var mock = new Mock<IOperationRepository>();
-        mock.Setup(r => r.FindOrderByCosineDistance(
+        mock.Setup(r => r.FindOrderByCosineDistanceAsync(
                 It.IsAny<float[]>(),
+                It.IsAny<int>(),
                 It.IsAny<int>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(candidatesToReturn);
@@ -133,8 +134,8 @@ public class OperationRetrievalServiceTests
         Assert.True(expected.SequenceEqual(result, ReferenceEqualityComparer.Instance));
 
         mockEmbed.Verify(e => e.GetEmbedding("test task"), Times.Once);
-        mockRepo.Verify(r => r.FindOrderByCosineDistance(
-            embeddingVector, _defaultOptions.CoarseRecallSize, CancellationToken.None), Times.Once);
+        mockRepo.Verify(r => r.FindOrderByCosineDistanceAsync(
+            embeddingVector, 0, _defaultOptions.CoarseRecallSize, CancellationToken.None), Times.Once);
         mockIdf.Verify(i => i.ComputeAverageIdfAsync(
             It.IsAny<string>(), CancellationToken.None), Times.Exactly(ops.Length));
     }
@@ -175,8 +176,8 @@ public class OperationRetrievalServiceTests
     public async Task RetrieveAsync_EmptyCoarseRecall_ReturnsEmptyArray()
     {
         var mockRepo = new Mock<IOperationRepository>();
-        mockRepo.Setup(r => r.FindOrderByCosineDistance(
-                It.IsAny<float[]>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
+        mockRepo.Setup(r => r.FindOrderByCosineDistanceAsync(
+                It.IsAny<float[]>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([]);
 
         var service = new OperationRetrievalService(
@@ -323,8 +324,9 @@ public class OperationRetrievalServiceTests
 
         var mockRepo = new Mock<IOperationRepository>();
         var capturedRepoToken = CancellationToken.None;
-        mockRepo.Setup(r => r.FindOrderByCosineDistance(
+        mockRepo.Setup(r => r.FindOrderByCosineDistanceAsync(
                 embeddingVector,
+                It.IsAny<int>(),
                 It.IsAny<int>(),
                 It.IsAny<CancellationToken>()))
             .Callback<float[], int, CancellationToken>((_, _, ct) => capturedRepoToken = ct)
@@ -363,8 +365,8 @@ public class OperationRetrievalServiceTests
         mockEmbed.Setup(e => e.GetEmbedding(It.IsAny<string>())).Returns(embeddingVector);
 
         var mockRepo = new Mock<IOperationRepository>();
-        mockRepo.Setup(r => r.FindOrderByCosineDistance(
-                embeddingVector, It.IsAny<int>(), token))
+        mockRepo.Setup(r => r.FindOrderByCosineDistanceAsync(
+                embeddingVector, It.IsAny<int>(), It.IsAny<int>(), token))
             .ThrowsAsync(new OperationCanceledException(token));
 
         var service = new OperationRetrievalService(

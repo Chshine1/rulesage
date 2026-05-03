@@ -6,6 +6,6 @@ public interface IOperationRepository : IDocumentRepository
 {
     Task<OperationBlueprint?> FindByIdAsync(int id, CancellationToken cancellationToken = default);
 
-    Task<IEnumerable<(OperationSignature, float)>> FindOrderByCosineDistance(float[] queryVector, int take,
+    Task<IEnumerable<(OperationSignature, float)>> FindOrderByCosineDistanceAsync(float[] queryVector, int skip, int take,
         CancellationToken cancellationToken = default);
 }

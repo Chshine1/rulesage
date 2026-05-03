@@ -6,6 +6,13 @@ namespace Rulesage.Cli.Commands.Operations;
 
 public static partial class OperationCommands
 {
+    public enum OperationFormat
+    {
+        Json,
+        Table,
+        Plain
+    }
+
     public static Command CreateSearchCommand(IServiceProvider serviceProvider)
     {
         var cmd = new Command("search", "Search operations by text or semantics")
@@ -24,22 +31,22 @@ public static partial class OperationCommands
                 Required = false,
                 DefaultValueFactory = _ => 0
             },
-            new Option<bool>("--details")
+            new Option<OperationFormat>("--format")
             {
                 Required = false,
-                DefaultValueFactory = _ => false
+                DefaultValueFactory = _ => OperationFormat.Plain
             }
         };
 
-        cmd.SetAction(async result =>
+        cmd.SetAction(async (result, cancellationToken) =>
         {
             using var scope = serviceProvider.CreateScope();
             var handler = scope.ServiceProvider.GetRequiredService<OperationsHandler>();
-            await handler.SearchBySemanticQuery(
+            await handler.SearchBySemanticQueryAsync(
                 result.GetRequiredValue<string>("--query"),
                 result.GetRequiredValue<int>("--offset"),
-                result.GetRequiredValue<int>("--limit")
-            );
+                result.GetRequiredValue<int>("--limit"),
+                result.GetRequiredValue<OperationFormat>("--format"), cancellationToken);
         });
 
         return cmd;

@@ -26,7 +26,7 @@ internal class OperationRetrievalService(
         var queryVector = embeddingService.GetEmbedding(nlTask);
 
         var coarseCandidates =
-            (await operationRepository.FindOrderByCosineDistance(queryVector, _options.CoarseRecallSize,
+            (await operationRepository.FindOrderByCosineDistanceAsync(queryVector, 0, _options.CoarseRecallSize,
                 cancellationToken)).ToArray();
 
         if (logger.IsEnabled(LogLevel.Debug))
